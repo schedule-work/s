@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>진료지원팀 근무표</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; background: #f9f9f9; }
+    h1 { text-align: center; font-size: 2em; margin-bottom: 30px; }
+    iframe {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      height: 700px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    p {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.95em;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>진료지원팀 6월 근무표</h1>
+
+  <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml?widget=true&headers=false"
+          frameborder="0" allowfullscreen></iframe>
+
+  <p>📄 최신 근무표는 <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml" target="_blank">
+    여기</a>에서 직접 확인할 수 있습니다.</p>
+</body>
+</html>
