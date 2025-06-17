@@ -29,15 +29,33 @@
       width: 100%;
       border-collapse: collapse;
       background-color: white;
+      table-layout: fixed; /* 열너비 강제 고정 */
     }
     th, td {
       border: 1px solid #ccc;
       padding: 12px;
       text-align: center;
       font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     th {
       background-color: #eaeaea;
+    }
+
+    /* 열너비 지정 */
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 80px; /* 7월 열 */
+    }
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 60px; /* 진료과 열 */
+    }
+    th:nth-child(6),
+    td:nth-child(6) {
+      width: 100px; /* 이름 열 */
     }
   </style>
 </head>
@@ -45,8 +63,8 @@
   <h1>진료지원팀 근무표</h1>
 
   <div class="tab-buttons">
-    <button onclick="loadSheet('0')">📄 기본 시트</button>
-    <button onclick="loadSheet('575796686')">📄 두 번째 시트</button>
+    <button onclick="loadSheet('0')">📄 진료지원,통합지원</button>
+    <button onclick="loadSheet('575796686')">📄 통합지원</button>
   </div>
 
   <table id="schedule-table"></table>
