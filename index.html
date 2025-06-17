@@ -2,33 +2,49 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>진료지원팀 근무표 (서식 포함)</title>
+  <title>[임상지원간호팀] 진료지원 근무표</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f8f8;
       padding: 40px;
     }
+
     h1 {
       text-align: center;
       margin-bottom: 30px;
     }
+
     iframe {
       width: 100%;
       height: 1000px;
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+
     .notice {
       text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #666;
+      margin-top: 40px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    .sheet-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #1a73e8;
+      text-decoration: none;
+    }
+
+    .sheet-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>진료지원팀 6월 근무표</h1>
+  <h1>[임상지원간호팀] 진료지원 근무표</h1>
 
   <iframe
     src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml?widget=true&amp;headers=false"
@@ -36,8 +52,13 @@
     allowfullscreen>
   </iframe>
 
-  <p class="notice">
-    ※ Google Sheets에서 디자인된 셀 병합, 열 너비, 정렬 등이 그대로 반영됩니다.
-  </p>
+  <div class="notice">
+   <br />
+    👉 <a class="sheet-link"
+          href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml"
+          target="_blank">
+        통합지원 근무표 전체 시트 열기
+    </a>
+  </div>
 </body>
 </html>
