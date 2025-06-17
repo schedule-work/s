@@ -15,6 +15,27 @@
       margin-bottom: 30px;
     }
 
+    .sheet-buttons {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sheet-buttons button {
+      margin: 5px 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background-color: #1a73e8;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .sheet-buttons button:hover {
+      background-color: #155ab6;
+    }
+
     iframe {
       width: 100%;
       height: 1000px;
@@ -25,40 +46,59 @@
     .notice {
       text-align: center;
       margin-top: 40px;
-      font-size: 18px;
+      font-size: 16px;
       color: #444;
-    }
-
-    .sheet-link {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #1a73e8;
-      text-decoration: none;
-    }
-
-    .sheet-link:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <h1>[임상지원간호팀] 진료지원 근무표</h1>
 
+  <div id="sheet-buttons" class="sheet-buttons">
+    <!-- 자동 생성될 시트 버튼 -->
+  </div>
+
   <iframe
-    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml?widget=true&amp;headers=false"
+    id="sheet-frame"
+    src=""
     frameborder="0"
     allowfullscreen>
   </iframe>
 
   <div class="notice">
-   <br />
-    👉 <a class="sheet-link"
-          href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml"
-          target="_blank">
-        통합지원 근무표 전체 시트 열기
-    </a>
+    ※ 위 버튼을 클릭하면 시트가 전환되며, Google Sheets에서 설정한 셀 병합과 열 너비 등이 그대로 표시됩니다.
   </div>
+
+  <script>
+    const sheetId = '14mG4OOau5IcwCsK17QzIw6G2AjQpQNym8ZrMtCLrNKE';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbxZWZ6eIHQn1RSLpAB8EqckUEFApEEPEqPKg2nvZQEvu05WGDP3TQAiMFzMootYeUSxFQ/exec';
+    const iframe = document.getElementById('sheet-frame');
+    const buttonContainer = document.getElementById('sheet-buttons');
+
+    // 기본 pubhtml 주소 (맨 앞은 고정, 뒤에 gid만 바뀜)
+    const pubhtmlPrefix = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml";
+
+    fetch(scriptUrl)
+      .then(response => response.json())
+      .then(sheets => {
+        sheets.forEach((sheet, index) => {
+          const button = document.createElement("button");
+          button.textContent = sheet.name;
+          button.onclick = () => {
+            iframe.src = `${pubhtmlPrefix}?gid=${sheet.gid}&widget=true&headers=false`;
+          };
+          buttonContainer.appendChild(button);
+
+          // 첫 시트는 자동으로 로드
+          if (index === 0) {
+            iframe.src = `${pubhtmlPrefix}?gid=${sheet.gid}&widget=true&headers=false`;
+          }
+        });
+      })
+      .catch(error => {
+        console.error("시트 목록 로딩 실패:", error);
+        buttonContainer.innerHTML = "<p>시트 목록을 불러올 수 없습니다.</p>";
+      });
+  </script>
 </body>
 </html>
