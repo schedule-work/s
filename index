@@ -3,28 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <title>진료지원팀 근무표</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 40px; background-color: #f8f8f8; }
-    h1 { font-size: 2em; }
-    .button {
-      display: inline-block;
-      padding: 12px 24px;
-      margin-top: 30px;
-      background-color: #007acc;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 1em;
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f7f7f7;
+      padding: 40px;
     }
-    .button:hover {
-      background-color: #005f99;
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .tab-buttons {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .tab-buttons button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+    th {
+      background-color: #eaeaea;
     }
   </style>
 </head>
 <body>
-  <h1>진료지원팀 6월 근무표</h1>
-  <p>근무표는 아래 버튼을 클릭하여 Google Sheets에서 확인하세요.</p>
-  <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml"
-     class="button" target="_blank">근무표 보기</a>
+  <h1>진료지원팀 근무표</h1>
+
+  <div class="tab-buttons">
+    <button onclick="loadSheet('0')">📄 기본 시트</button>
+    <button onclick="loadSheet('575796686')">📄 두 번째 시트</button>
+  </div>
+
+  <table id="schedule-table"></table>
+
+  <script>
+    const sheetId = '14mG4OOau5IcwCsK17QzIw6G2AjQpQNym8ZrMtCLrNKE';
+
+    function loadSheet(gid) {
+      const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+      const table = document.getElementById("schedule-table");
+      table.innerHTML = ""; // Clear table
+
+      Papa.parse(csvUrl, {
+        download: true,
+        complete: function(results) {
+          const rows = results.data;
+          rows.forEach((row, i) => {
+            const tr = document.createElement("tr");
+            row.forEach(cell => {
+              const el = document.createElement(i === 0 ? "th" : "td");
+              el.textContent = cell;
+              tr.appendChild(el);
+            });
+            table.appendChild(tr);
+          });
+        }
+      });
+    }
+
+    // 기본 시트 로드
+    loadSheet('0');
+  </script>
 </body>
 </html>
