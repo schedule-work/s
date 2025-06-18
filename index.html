@@ -18,10 +18,22 @@
       padding: 20px 5px;
       min-height: 100vh;
       transition: width 0.3s ease;
+      overflow-x: hidden;
     }
 
     .sidebar.collapsed {
       width: 40px;
+    }
+
+    .sidebar.collapsed button,
+    .sidebar.collapsed h2 {
+      display: none;
+    }
+
+    .sidebar.collapsed .toggle-button {
+      display: block;
+      width: 100%;
+      text-align: center;
     }
 
     .sidebar h2 {
@@ -48,6 +60,9 @@
       text-align: left;
       cursor: pointer;
       transition: background 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .sidebar button:hover {
@@ -97,11 +112,11 @@
     <button class="toggle-button" onclick="toggleSidebar()">☰</button>
     <h2>📂 구분</h2>
     <div class="section">
-      <button onclick="toggleGroup('group1', this)">▸ 진료지원</button>
+      <button id="btn-group1" onclick="toggleGroup('group1', this)">▸ 진료지원</button>
       <div id="group1-sub" class="sub-buttons"></div>
     </div>
     <div class="section">
-      <button onclick="toggleGroup('group2', this)">▸ 전담간호사</button>
+      <button id="btn-group2" onclick="toggleGroup('group2', this)">▸ 전담간호사</button>
       <div id="group2-sub" class="sub-buttons"></div>
     </div>
   </div>
@@ -125,8 +140,6 @@
       }
     };
 
-    let activeGroup = null;
-
     function toggleGroup(groupKey, buttonEl) {
       const container = document.getElementById(`${groupKey}-sub`);
 
@@ -134,7 +147,6 @@
       buttonEl.classList.add("active");
 
       if (container.childElementCount > 0) {
-        container.innerHTML = '';
         return;
       }
 
@@ -153,7 +165,6 @@
               btn.classList.add("active");
             };
             container.appendChild(btn);
-
             if (index === 0) {
               btn.click();
             }
@@ -170,10 +181,11 @@
       sidebar.classList.toggle("collapsed");
     }
 
-    // 기본 로딩
     document.addEventListener("DOMContentLoaded", () => {
-      const firstSection = document.querySelector(".section button");
-      if (firstSection) firstSection.click();
+      const btnGroup1 = document.getElementById("btn-group1");
+      const btnGroup2 = document.getElementById("btn-group2");
+      if (btnGroup1) btnGroup1.click();
+      if (btnGroup2) btnGroup2.click();
     });
   </script>
 </body>
