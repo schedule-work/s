@@ -5,41 +5,52 @@
   <title>[임상지원간호팀] 통합 근무표</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f8f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f4f4f7;
       margin: 0;
       display: flex;
     }
 
     .sidebar {
-      width: 180px;
-      background-color: #1a73e8;
+      width: 240px;
+      background-color: #f9f9f9;
+      border-right: 1px solid #ddd;
       padding: 20px 10px;
-      color: white;
       min-height: 100vh;
     }
 
     .sidebar h2 {
       font-size: 18px;
       margin-bottom: 15px;
+      color: #333;
+    }
+
+    .sidebar .section {
+      margin-bottom: 20px;
     }
 
     .sidebar button {
       display: block;
       width: 100%;
-      margin: 5px 0;
+      margin: 3px 0;
       padding: 10px;
-      background-color: #4285f4;
-      color: white;
+      background-color: transparent;
+      color: #333;
       border: none;
       border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
+      font-weight: 500;
       text-align: left;
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
     .sidebar button:hover {
-      background-color: #3367d6;
+      background-color: #e5e5e5;
+    }
+
+    .sidebar .sub-buttons {
+      margin-left: 10px;
+      margin-top: 5px;
     }
 
     .content {
@@ -50,27 +61,7 @@
     h1 {
       text-align: center;
       margin-bottom: 30px;
-    }
-
-    .sheet-buttons {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .sheet-buttons button {
-      margin: 5px 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background-color: #1a73e8;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .sheet-buttons button:hover {
-      background-color: #155ab6;
+      color: #222;
     }
 
     iframe {
@@ -84,13 +75,18 @@
 <body>
   <div class="sidebar">
     <h2>📂 구분</h2>
-    <button onclick="switchSheetGroup('group1')">[진료지원]</button>
-    <button onclick="switchSheetGroup('group2')">[전담간호사]</button>
+    <div class="section">
+      <button onclick="toggleGroup('group1')">▸ 진료지원</button>
+      <div id="group1-sub" class="sub-buttons"></div>
+    </div>
+    <div class="section">
+      <button onclick="toggleGroup('group2')">▸ 전담간호사</button>
+      <div id="group2-sub" class="sub-buttons"></div>
+    </div>
   </div>
 
   <div class="content">
     <h1>[임상지원간호팀] 통합 근무표</h1>
-    <div id="sheet-buttons" class="sheet-buttons"></div>
     <iframe id="sheet-frame" src=""></iframe>
   </div>
 
@@ -108,11 +104,14 @@
       }
     };
 
-    function switchSheetGroup(groupKey) {
+    function toggleGroup(groupKey) {
+      const container = document.getElementById(`${groupKey}-sub`);
+      if (container.childElementCount > 0) {
+        container.innerHTML = '';
+        return;
+      }
+
       const { api, pubhtmlPrefix } = sheetGroups[groupKey];
-      const buttonContainer = document.getElementById("sheet-buttons");
-      const iframe = document.getElementById("sheet-frame");
-      buttonContainer.innerHTML = "";
 
       fetch(api)
         .then(res => res.json())
@@ -121,23 +120,24 @@
             const btn = document.createElement("button");
             btn.textContent = name;
             btn.onclick = () => {
-              iframe.src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
+              document.getElementById("sheet-frame").src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
             };
-            buttonContainer.appendChild(btn);
+            container.appendChild(btn);
 
+            // 처음 항목 자동 로딩 (선택적)
             if (index === 0) {
-              iframe.src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
+              document.getElementById("sheet-frame").src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
             }
           });
         })
         .catch(err => {
-          buttonContainer.innerHTML = "<p>시트 로딩 오류 발생</p>";
+          container.innerHTML = "<p style='color:#999;'>시트 로딩 실패</p>";
           console.error(err);
         });
     }
 
-    // 기본 로딩은 group1
-    switchSheetGroup('group1');
+    // 초기 자동 로딩 (원하면 자동 열리게 설정 가능)
+    toggleGroup('group1');
   </script>
 </body>
 </html>
