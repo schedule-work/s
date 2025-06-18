@@ -41,14 +41,8 @@
       display: none;
     }
 
-    .sidebar h2 {
-      font-size: 18px;
-      margin: 30px 0 15px 0;
-      color: #333;
-      text-align: center;
-    }
-
     .sidebar .section {
+      margin-top: 70px;
       margin-bottom: 20px;
     }
 
@@ -83,7 +77,12 @@
     .sidebar .sub-buttons {
       margin-left: 10px;
       margin-top: 5px;
-      font-size: 14px;
+    }
+
+    #group1-sub button,
+    #group2-sub button {
+      font-size: 13px;
+      line-height: 1.4;
     }
 
     .toggle-button {
@@ -119,7 +118,7 @@
     <div class="toggle-wrapper">
       <button class="toggle-button" onclick="toggleSidebar()" title="탭 접기/펼치기">☰</button>
     </div>
-        <div class="section">
+    <div class="section">
       <button id="btn-group1" onclick="toggleGroup('group1', this)">▸ 진료지원</button>
       <div id="group1-sub" class="sub-buttons"></div>
     </div>
@@ -153,7 +152,7 @@
     function toggleGroup(groupKey, buttonEl) {
       const container = document.getElementById(`${groupKey}-sub`);
 
-      document.querySelectorAll(".sidebar button").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".sidebar .section > button").forEach(btn => btn.classList.remove("active"));
       buttonEl.classList.add("active");
 
       if (container.childElementCount > 0) return;
@@ -192,8 +191,12 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      // 먼저 진료지원 탭 클릭
       document.getElementById("btn-group1")?.click();
-      document.getElementById("btn-group2")?.click();
+      // 나중에 전담간호사 펼치기 (선택 효과 없음)
+      setTimeout(() => {
+        document.getElementById("btn-group2")?.click();
+      }, 100);
     });
   </script>
 </body>
