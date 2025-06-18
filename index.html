@@ -26,14 +26,14 @@
     }
 
     .sidebar.collapsed button,
-    .sidebar.collapsed h2 {
+    .sidebar.collapsed h2,
+    .sidebar.collapsed .section {
       display: none;
     }
 
-    .sidebar.collapsed .toggle-button {
-      display: block;
-      width: 100%;
-      text-align: center;
+    .sidebar.collapsed .toggle-wrapper {
+      display: flex;
+      justify-content: center;
     }
 
     .sidebar h2 {
@@ -85,7 +85,6 @@
       font-size: 20px;
       cursor: pointer;
       padding: 5px;
-      margin-bottom: 10px;
     }
 
     .content {
@@ -109,7 +108,9 @@
 </head>
 <body>
   <div class="sidebar" id="sidebar">
-    <button class="toggle-button" onclick="toggleSidebar()">☰</button>
+    <div class="toggle-wrapper">
+      <button class="toggle-button" onclick="toggleSidebar()" title="탭 접기/펼치기">☰</button>
+    </div>
     <h2>📂 구분</h2>
     <div class="section">
       <button id="btn-group1" onclick="toggleGroup('group1', this)">▸ 진료지원</button>
@@ -140,15 +141,15 @@
       }
     };
 
+    let firstLoaded = false;
+
     function toggleGroup(groupKey, buttonEl) {
       const container = document.getElementById(`${groupKey}-sub`);
 
       document.querySelectorAll(".sidebar button").forEach(btn => btn.classList.remove("active"));
       buttonEl.classList.add("active");
 
-      if (container.childElementCount > 0) {
-        return;
-      }
+      if (container.childElementCount > 0) return;
 
       const { api, pubhtmlPrefix } = sheetGroups[groupKey];
 
@@ -165,8 +166,10 @@
               btn.classList.add("active");
             };
             container.appendChild(btn);
-            if (index === 0) {
+
+            if (groupKey === 'group1' && index === 0 && !firstLoaded) {
               btn.click();
+              firstLoaded = true;
             }
           });
         })
@@ -182,10 +185,8 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const btnGroup1 = document.getElementById("btn-group1");
-      const btnGroup2 = document.getElementById("btn-group2");
-      if (btnGroup1) btnGroup1.click();
-      if (btnGroup2) btnGroup2.click();
+      document.getElementById("btn-group1")?.click();
+      document.getElementById("btn-group2")?.click();
     });
   </script>
 </body>
