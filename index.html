@@ -12,11 +12,16 @@
     }
 
     .sidebar {
-      width: 240px;
+      width: 180px;
       background-color: #f9f9f9;
       border-right: 1px solid #ddd;
-      padding: 20px 10px;
+      padding: 20px 5px;
       min-height: 100vh;
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+      width: 40px;
     }
 
     .sidebar h2 {
@@ -38,7 +43,8 @@
       color: #333;
       border: none;
       border-radius: 4px;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 16px;
       text-align: left;
       cursor: pointer;
       transition: background 0.2s;
@@ -48,9 +54,23 @@
       background-color: #e5e5e5;
     }
 
+    .sidebar button.active {
+      background-color: #d0d0d0;
+      font-weight: 700;
+    }
+
     .sidebar .sub-buttons {
       margin-left: 10px;
       margin-top: 5px;
+    }
+
+    .toggle-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px;
+      margin-bottom: 10px;
     }
 
     .content {
@@ -73,14 +93,15 @@
   </style>
 </head>
 <body>
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
+    <button class="toggle-button" onclick="toggleSidebar()">☰</button>
     <h2>📂 구분</h2>
     <div class="section">
-      <button onclick="toggleGroup('group1')">▸ 진료지원</button>
+      <button onclick="toggleGroup('group1', this)">▸ 진료지원</button>
       <div id="group1-sub" class="sub-buttons"></div>
     </div>
     <div class="section">
-      <button onclick="toggleGroup('group2')">▸ 전담간호사</button>
+      <button onclick="toggleGroup('group2', this)">▸ 전담간호사</button>
       <div id="group2-sub" class="sub-buttons"></div>
     </div>
   </div>
@@ -104,8 +125,14 @@
       }
     };
 
-    function toggleGroup(groupKey) {
+    let activeGroup = null;
+
+    function toggleGroup(groupKey, buttonEl) {
       const container = document.getElementById(`${groupKey}-sub`);
+
+      document.querySelectorAll(".sidebar button").forEach(btn => btn.classList.remove("active"));
+      buttonEl.classList.add("active");
+
       if (container.childElementCount > 0) {
         container.innerHTML = '';
         return;
@@ -116,17 +143,19 @@
       fetch(api)
         .then(res => res.json())
         .then(sheets => {
+          container.innerHTML = '';
           sheets.forEach(({ name, gid }, index) => {
             const btn = document.createElement("button");
             btn.textContent = name;
             btn.onclick = () => {
               document.getElementById("sheet-frame").src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
+              document.querySelectorAll(".sub-buttons button").forEach(b => b.classList.remove("active"));
+              btn.classList.add("active");
             };
             container.appendChild(btn);
 
-            // 처음 항목 자동 로딩 (선택적)
             if (index === 0) {
-              document.getElementById("sheet-frame").src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
+              btn.click();
             }
           });
         })
@@ -136,8 +165,16 @@
         });
     }
 
-    // 초기 자동 로딩 (원하면 자동 열리게 설정 가능)
-    toggleGroup('group1');
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("collapsed");
+    }
+
+    // 기본 로딩
+    document.addEventListener("DOMContentLoaded", () => {
+      const firstSection = document.querySelector(".section button");
+      if (firstSection) firstSection.click();
+    });
   </script>
 </body>
 </html>
