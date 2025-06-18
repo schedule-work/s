@@ -2,11 +2,48 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>[임상지원간호팀] 진료지원 근무표</title>
+  <title>[임상지원간호팀] 통합 근무표</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f8f8;
+      margin: 0;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 180px;
+      background-color: #1a73e8;
+      padding: 20px 10px;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .sidebar button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .sidebar button:hover {
+      background-color: #3367d6;
+    }
+
+    .content {
+      flex-grow: 1;
       padding: 40px;
     }
 
@@ -42,63 +79,65 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
-
-    .notice {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 16px;
-      color: #444;
-    }
   </style>
 </head>
 <body>
-  <h1>[임상지원간호팀] 진료지원 근무표</h1>
-
-  <div id="sheet-buttons" class="sheet-buttons">
-    <!-- 자동 생성될 시트 버튼 -->
+  <div class="sidebar">
+    <h2>📂 구분</h2>
+    <button onclick="switchSheetGroup('group1')">[진료지원]</button>
+    <button onclick="switchSheetGroup('group2')">[전담간호사]</button>
   </div>
 
-  <iframe
-    id="sheet-frame"
-    src=""
-    frameborder="0"
-    allowfullscreen>
-  </iframe>
-
-  <div class="notice">
-  
+  <div class="content">
+    <h1>[임상지원간호팀] 통합 근무표</h1>
+    <div id="sheet-buttons" class="sheet-buttons"></div>
+    <iframe id="sheet-frame" src=""></iframe>
   </div>
 
   <script>
-    const sheetId = '14mG4OOau5IcwCsK17QzIw6G2AjQpQNym8ZrMtCLrNKE';
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbxZWZ6eIHQn1RSLpAB8EqckUEFApEEPEqPKg2nvZQEvu05WGDP3TQAiMFzMootYeUSxFQ/exec';
-    const iframe = document.getElementById('sheet-frame');
-    const buttonContainer = document.getElementById('sheet-buttons');
+    const sheetGroups = {
+      group1: {
+        name: "진료지원",
+        pubhtmlPrefix: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml",
+        api: "https://script.google.com/macros/s/AKfycbxZWZ6eIHQn1RSLpAB8EqckUEFApEEPEqPKg2nvZQEvu05WGDP3TQAiMFzMootYeUSxFQ/exec"
+      },
+      group2: {
+        name: "전담간호사",
+        pubhtmlPrefix: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWjnyzr3Qa-UuQ9fRf3lwiRm4vVA7jLOPtJiYe9TU1C-n4dyHcqVk967ahJJWpG_SUbsXwfdBC8Rh-/pubhtml",
+        api: "https://script.google.com/macros/s/AKfycbzBpLXtYgjmbzRp74KMrdb2_tZTJYkAQn_aMRQ2AQau3IoofRKA42tzEKpOGn4Hhftmew/exec"
+      }
+    };
 
-    // 기본 pubhtml 주소 (맨 앞은 고정, 뒤에 gid만 바뀜)
-    const pubhtmlPrefix = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRyaIg5AxN1I8wD2Jrjr1o952ObrO_sHA3vL_Z1403dZLx9u9ooqmlLyuv5fQmeN6HnMmFdIRgCfi7_/pubhtml";
+    function switchSheetGroup(groupKey) {
+      const { api, pubhtmlPrefix } = sheetGroups[groupKey];
+      const buttonContainer = document.getElementById("sheet-buttons");
+      const iframe = document.getElementById("sheet-frame");
+      buttonContainer.innerHTML = "";
 
-    fetch(scriptUrl)
-      .then(response => response.json())
-      .then(sheets => {
-        sheets.forEach((sheet, index) => {
-          const button = document.createElement("button");
-          button.textContent = sheet.name;
-          button.onclick = () => {
-            iframe.src = `${pubhtmlPrefix}?gid=${sheet.gid}&widget=true&headers=false`;
-          };
-          buttonContainer.appendChild(button);
+      fetch(api)
+        .then(res => res.json())
+        .then(sheets => {
+          sheets.forEach(({ name, gid }, index) => {
+            const btn = document.createElement("button");
+            btn.textContent = name;
+            btn.onclick = () => {
+              iframe.src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
+            };
+            buttonContainer.appendChild(btn);
 
-          // 첫 시트는 자동으로 로드
-          if (index === 0) {
-            iframe.src = `${pubhtmlPrefix}?gid=${sheet.gid}&widget=true&headers=false`;
-          }
+            if (index === 0) {
+              iframe.src = `${pubhtmlPrefix}?gid=${gid}&widget=true&headers=false`;
+            }
+          });
+        })
+        .catch(err => {
+          buttonContainer.innerHTML = "<p>시트 로딩 오류 발생</p>";
+          console.error(err);
         });
-      })
-      .catch(error => {
-        console.error("시트 목록 로딩 실패:", error);
-        buttonContainer.innerHTML = "<p>시트 목록을 불러올 수 없습니다.</p>";
-      });
+    }
+
+    // 기본 로딩은 group1
+    switchSheetGroup('group1');
   </script>
 </body>
 </html>
