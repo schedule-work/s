@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>[임상지원간호팀] 통합 근무표</title>
+  <title>[임상지원간호팀] 근무표</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -42,7 +42,7 @@
     }
 
     .sidebar .section {
-      margin-top: 70px;
+      margin-top: 40px;
       margin-bottom: 20px;
     }
 
@@ -147,7 +147,7 @@
       }
     };
 
-    let firstLoaded = false;
+    let firstLoaded = {};
 
     function toggleGroup(groupKey, buttonEl) {
       const container = document.getElementById(`${groupKey}-sub`);
@@ -173,10 +173,9 @@
             };
             container.appendChild(btn);
 
-            if (groupKey === 'group1' && index === 0 && !firstLoaded) {
-              btn.click();
-              firstLoaded = true;
-            }
+            if (index === 0) {
+  btn.click();
+}
           });
         })
         .catch(err => {
@@ -191,13 +190,9 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      // 먼저 진료지원 탭 클릭
-      document.getElementById("btn-group1")?.click();
-      // 나중에 전담간호사 펼치기 (선택 효과 없음)
-      setTimeout(() => {
-        document.getElementById("btn-group2")?.click();
-      }, 100);
-    });
+  document.getElementById("btn-group1")?.click();
+  document.getElementById("btn-group2")?.click();
+});
   </script>
 </body>
 </html>
