@@ -15,7 +15,7 @@
       width: 180px;
       background-color: #f9f9f9;
       border-right: 1px solid #ddd;
-      padding: 20px 5px;
+      padding: 20px 5px 5px 5px;
       min-height: 100vh;
       transition: width 0.3s ease;
       overflow-x: hidden;
@@ -24,12 +24,6 @@
 
     .sidebar.collapsed {
       width: 40px;
-    }
-
-    .sidebar.collapsed button,
-    .sidebar.collapsed h2,
-    .sidebar.collapsed .section {
-      display: none;
     }
 
     .sidebar .toggle-wrapper {
@@ -42,14 +36,16 @@
       z-index: 1000;
     }
 
-    .sidebar.collapsed .toggle-wrapper {
-      display: flex;
+    .sidebar.collapsed .section,
+    .sidebar.collapsed h2 {
+      display: none;
     }
 
     .sidebar h2 {
       font-size: 18px;
-      margin-bottom: 15px;
+      margin: 60px 0 15px 0;
       color: #333;
+      text-align: center;
     }
 
     .sidebar .section {
@@ -95,7 +91,7 @@
       font-size: 20px;
       cursor: pointer;
       padding: 5px;
-      margin: 0 auto;
+      margin-top: 0;
     }
 
     .content {
