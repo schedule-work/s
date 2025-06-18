@@ -129,7 +129,7 @@
   </div>
 
   <div class="content">
-    <h1>[임상지원간호팀] 근무표</h1>
+    <h1>[임상지원간호팀] 통합 근무표</h1>
     <iframe id="sheet-frame" src=""></iframe>
   </div>
 
@@ -190,6 +190,17 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+  // 진료지원 시트를 먼저 강제 로드
+  fetch(sheetGroups.group1.api)
+    .then(res => res.json())
+    .then(sheets => {
+      const first = sheets[0];
+      if (first) {
+        document.getElementById("sheet-frame").src = `${sheetGroups.group1.pubhtmlPrefix}?gid=${first.gid}&widget=true&headers=false`;
+      }
+    });
+
+  // 그 후 좌측 메뉴 렌더링
   document.getElementById("btn-group1")?.click();
   document.getElementById("btn-group2")?.click();
 });
