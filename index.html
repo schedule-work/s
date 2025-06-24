@@ -193,26 +193,29 @@
       sidebar.classList.toggle("collapsed");
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-  // 진료지원 시트를 먼저 강제 로드
-  fetch(sheetGroups.group1.api)
-    .then(res => res.json())
-    .then(sheets => {
-      const first = sheets[0];
-      if (first) {
-        document.getElementById("sheet-frame").src = `${sheetGroups.group1.pubhtmlPrefix}?gid=${first.gid}&widget=true&headers=false`;
-      }
-    });
-
-  // 그 후 좌측 메뉴 렌더링
-  document.getElementById("btn-group1")?.click();
-  document.getElementById("btn-group2")?.click();
-});
-      // URL 파라미터 처리: 특정 그룹과 시트를 직접 로딩
+document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const groupKey = urlParams.get('group');
   const sheetName = urlParams.get('sheet');
 
+  // ▶ URL 파라미터 없을 때만 진료지원 첫 시트 자동 로드
+  if (!(groupKey && sheetName)) {
+    fetch(sheetGroups.group1.api)
+      .then(res => res.json())
+      .then(sheets => {
+        const first = sheets[0];
+        if (first) {
+          document.getElementById("sheet-frame").src =
+            `${sheetGroups.group1.pubhtmlPrefix}?gid=${first.gid}&widget=true&headers=false`;
+        }
+      });
+  }
+
+  // 좌측 탭 렌더링은 항상 수행
+  document.getElementById("btn-group1")?.click();
+  document.getElementById("btn-group2")?.click();
+
+  // ▶ URL 파라미터로 들어왔을 경우 해당 시트 열기
   if (groupKey && sheetGroups[groupKey]) {
     fetch(sheetGroups[groupKey].api)
       .then(res => res.json())
@@ -223,6 +226,8 @@
             `${sheetGroups[groupKey].pubhtmlPrefix}?gid=${match.gid}&widget=true&headers=false`;
         }
       });
+  }
+});
   }
   </script>
 </body>
