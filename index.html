@@ -208,6 +208,22 @@
   document.getElementById("btn-group1")?.click();
   document.getElementById("btn-group2")?.click();
 });
+      // URL 파라미터 처리: 특정 그룹과 시트를 직접 로딩
+  const urlParams = new URLSearchParams(window.location.search);
+  const groupKey = urlParams.get('group');
+  const sheetName = urlParams.get('sheet');
+
+  if (groupKey && sheetGroups[groupKey]) {
+    fetch(sheetGroups[groupKey].api)
+      .then(res => res.json())
+      .then(sheets => {
+        const match = sheets.find(s => s.name === sheetName);
+        if (match) {
+          document.getElementById("sheet-frame").src =
+            `${sheetGroups[groupKey].pubhtmlPrefix}?gid=${match.gid}&widget=true&headers=false`;
+        }
+      });
+  }
   </script>
 </body>
 </html>
